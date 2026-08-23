@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Offline Chatbot</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f4f6;
+}
+
+#chatButton {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    background: #111827;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+#chatWindow {
+    display: none;
+    position: fixed;
+    right: 25px;
+    bottom: 95px;
+    width: 370px;
+    height: 550px;
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px #0003;
+}
+
+#header {
+    height: 65px;
+    background: #111827;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+#title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#online {
+    font-size: 11px;
+    color: #a7f3d0;
+}
+
+#close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+#messages {
+    height: 410px;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.message {
+    max-width: 82%;
+    padding: 11px 13px;
+    margin-bottom: 10px;
+    border-radius: 13px;
+    line-height: 1.45;
+    word-wrap: break-word;
+}
+
+.bot {
+    background: #eeeeee;
+    color: #111;
+}
+
+.user {
+    background: #111827;
+    color: white;
+    margin-left: auto;
+}
+
+#inputArea {
+    height: 75px;
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    gap: 6px;
+}
+
+#input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    outline: none;
+}
+
+#send {
+    width: 55px;
+    border: none;
+    border-radius: 10px;
+    background: #111827;
+    color: white;
+    cursor: pointer;
+}
+
+#send:hover,
+#chatButton:hover {
+    opacity: .85;
+}
+
+@media(max-width:500px) {
+
+    #chatWindow {
+        width: calc(100% - 20px);
+        height: calc(100% - 20px);
+        right: 10px;
+        bottom: 10px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<button id="chatButton" onclick="openChat()">🤖</button>
+
+<div id="chatWindow">
+
+    <div id="header">
+
+        <div>
+            <div id="title">🤖 Smart Assistant</div>
+            <div id="online">● Online</div>
+        </div>
+
+        <button id="close" onclick="closeChat()">×</button>
+
+    </div>
+
+    <div id="messages">
+
+        <div class="message bot">
+            Hello! 👋<br><br>
+            I'm your smart website assistant.<br><br>
+            Try asking me things like:<br>
+            • What is your name?<br>
+            • What can you do?<br>
+            • What is HTML?<br>
+            • What is JavaScript?<br>
+            • Tell me a joke<br>
+            • What time is it?
+        </div>
+
+    </div>
+
+    <div id="inputArea">
+
+        <input
+            id="input"
+            placeholder="Ask me anything..."
+            autocomplete="off"
+        >
+
+        <button id="send" onclick="sendMessage()">➤</button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function openChat() {
+    document.getElementById("chatWindow").style.display = "block";
+}
+
+function closeChat() {
+    document.getElementById("chatWindow").style.display = "none";
+}
+
+
+/* Add message */
+
+function addMessage(text, type) {
+
+    const messages = document.getElementById("messages");
+
+    const div = document.createElement("div");
+
+    div.className = "message " + type;
+
+    div.innerHTML = text;
+
+    messages.appendChild(div);
+
+    messages.scrollTop = messages.scrollHeight;
+}
+
+
+/* Send message */
+
+function sendMessage() {
+
+    const input = document.getElementById("input");
+
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    addMessage(text, "user");
+
+    input.value = "";
+
+    setTimeout(() => {
+
+        const answer = getAnswer(text);
+
+        addMessage(answer, "bot");
+
+    }, 400);
+}
+
+
+/* Smart response system */
+
+function getAnswer(message) {
+
+    const text = message.toLowerCase().trim();
+
+
+    /* GREETINGS */
+
+    if (
+        text.includes("hello") ||
+        text.includes("hi") ||
+        text.includes("hey") ||
+        text.includes("namaste")
+    ) {
+
+        return "Hello! 👋 How can I help you today?";
+
+    }
+
+
+    /* NAME */
+
+    if (
+        text.includes("your name") ||
+        text.includes("who are you")
+    ) {
+
+        return "I'm your Smart Website Assistant 🤖.";
+
+    }
+
+
+    /* HOW ARE YOU */
+
+    if (
+        text.includes("how are you") ||
+        text.includes("how r you")
+    ) {
+
+        return "I'm doing great! 😊 Thanks for asking.";
+
+    }
+
+
+    /* WHAT CAN YOU DO */
+
+    if (
+        text.includes("what can you do") ||
+        text.includes("your features")
+    ) {
+
+        return `
+        I can help with many common questions, including:
+        <br><br>
+        💻 Computers<br>
+        🌐 Websites<br>
+        📚 Study questions<br>
+        🧑‍💻 Programming<br>
+        🕐 Date and time<br>
+        😂 Jokes<br>
+        💬 General conversation
+        `;
+
+    }
+
+
+    /* HTML */
+
+    if (
+        text.includes("what is html") ||
+        text === "html"
+    ) {
+
+        return `
+        <b>HTML</b> stands for HyperText Markup Language.
+        <br><br>
+        It is used to create the structure of webpages.
+        `;
+
+    }
+
+
+    /* CSS */
+
+    if (
+        text.includes("what is css") ||
+        text === "css"
+    ) {
+
+        return `
+        <b>CSS</b> stands for Cascading Style Sheets.
+        <br><br>
+        It is used to design webpages, including colors,
+        fonts, layouts and animations.
+        `;
+
+    }
+
+
+    /* JAVASCRIPT */
+
+    if (
+        text.includes("what is javascript") ||
+        text === "javascript"
+    ) {
+
+        return `
+        <b>JavaScript</b> is a programming language used
+        to make websites interactive and dynamic.
+        `;
+
+    }
+
+
+    /* WEBSITE */
+
+    if (
+        text.includes("what is a website") ||
+        text.includes("what is website")
+    ) {
+
+        return `
+        A website is a collection of webpages available
+        on the internet. 🌐
+        `;
+
+    }
+
+
+    /* COMPUTER */
+
+    if (
+        text.includes("what is computer") ||
+        text.includes("computer")
+    ) {
+
+        return `
+        A computer is an electronic device that processes
+        information and performs tasks according to instructions.
+        `;
+
+    }
+
+
+    /* SOFTWARE */
+
+    if (
+        text.includes("what is software") ||
+        text.includes("software")
+    ) {
+
+        return `
+        Software is a set of programs and instructions
+        that tells a computer what to do.
+        `;
+
+    }
+
+
+    /* HARDWARE */
+
+    if (
+        text.includes("what is hardware") ||
+        text.includes("hardware")
+    ) {
+
+        return `
+        Hardware refers to the physical parts of a computer,
+        such as the keyboard, mouse, RAM and processor.
+        `;
+
+    }
+
+
+    /* INTERNET */
+
+    if (
+        text.includes("what is internet") ||
+        text.includes("internet")
+    ) {
+
+        return `
+        The Internet is a worldwide network that connects
+        computers and devices so they can communicate and
+        share information.
+        `;
+
+    }
+
+
+    /* AI */
+
+    if (
+        text.includes("what is ai") ||
+        text.includes("what is artificial intelligence")
+    ) {
+
+        return `
+        <b>AI</b> means Artificial Intelligence.
+        <br><br>
+        It allows computers to perform tasks that normally
+        require human intelligence.
+        `;
+
+    }
+
+
+    /* PROGRAMMING */
+
+    if (
+        text.includes("what is programming") ||
+        text.includes("programming")
+    ) {
+
+        return `
+        Programming is the process of writing instructions
+        that tell a computer how to perform a task.
+        `;
+
+    }
+
+
+    /* PYTHON */
+
+    if (
+        text.includes("what is python") ||
+        text === "python"
+    ) {
+
+        return `
+        Python is a popular programming language known for
+        its simple syntax and wide range of uses.
+        `;
+
+    }
+
+
+    /* JAVA */
+
+    if (
+        text.includes("what is java") ||
+        text === "java"
+    ) {
+
+        return `
+        Java is a popular programming language used for
+        applications, websites, Android development and more.
+        `;
+
+    }
+
+
+    /* SOFTWARE ENGINEERING */
+
+    if (
+        text.includes("software engineering")
+    ) {
+
+        return `
+        Software engineering is the systematic process of
+        designing, developing, testing and maintaining software.
+        `;
+
+    }
+
+
+    /* TIME */
+
+    if (text.includes("time")) {
+
+        return "The current time is <b>" +
+        new Date().toLocaleTimeString() +
+        "</b>.";
+
+    }
+
+
+    /* DATE */
+
+    if (
+        text.includes("date") ||
+        text.includes("today")
+    ) {
+
+        return "Today's date is <b>" +
+        new Date().toLocaleDateString() +
+        "</b>.";
+
+    }
+
+
+    /* DAY */
+
+    if (text.includes("what day")) {
+
+        return "Today is <b>" +
+        new Date().toLocaleDateString(
+            undefined,
+            { weekday: "long" }
+        ) +
+        "</b>.";
+
+    }
+
+
+    /* JOKE */
+
+    if (
+        text.includes("joke") ||
+        text.includes("funny")
+    ) {
+
+        const jokes = [
+
+            "Why did the computer go to the doctor? Because it had a virus! 😂",
+
+            "Why was the computer cold? It left its Windows open! 😂",
+
+            "Why do programmers prefer dark mode? Because light attracts bugs! 🐛😂"
+
+        ];
+
+        return jokes[
+            Math.floor(Math.random() * jokes.length)
+        ];
+
+    }
+
+
+    /* THANK YOU */
+
+    if (
+        text.includes("thank you") ||
+        text.includes("thanks")
+    ) {
+
+        return "You're welcome! 😊";
+
+    }
+
+
+    /* BYE */
+
+    if (
+        text === "bye" ||
+        text.includes("goodbye")
+    ) {
+
+        return "Goodbye! 👋 Have a great day!";
+
+    }
+
+
+    /* GOOD MORNING */
+
+    if (text.includes("good morning")) {
+
+        return "Good morning! ☀️ Hope you have a wonderful day!";
+
+    }
+
+
+    /* GOOD AFTERNOON */
+
+    if (text.includes("good afternoon")) {
+
+        return "Good afternoon! 😊 How can I help you?";
+
+    }
+
+
+    /* GOOD EVENING */
+
+    if (text.includes("good evening")) {
+
+        return "Good evening! 🌆 What can I do for you?";
+
+    }
+
+
+    /* GOOD NIGHT */
+
+    if (text.includes("good night")) {
+
+        return "Good night! 🌙 Sleep well!";
+
+    }
+
+
+    /* DEFAULT */
+
+    return `
+        I can answer many common questions about
+        computers, websites, programming and general topics.
+        <br><br>
+        Try asking:
+        <br>
+        "What is HTML?"
+        <br>
+        "What is AI?"
+        <br>
+        "Tell me a joke."
+    `;
+}
+
+
+/* ENTER KEY */
+
+document.getElementById("input").addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
