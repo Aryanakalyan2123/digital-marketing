@@ -5,15 +5,16 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-// Serve files from the current folder
-app.use(express.static(__dirname));
+// Serve all files from the public folder
+app.use(express.static(path.join(__dirname, "public")));
 
 // Homepage
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // Start server
 app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
+   
