@@ -3,21 +3,18 @@ const path = require("path");
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-
-
-// Backend test API
-app.get("/api/test", (req, res) => {
-    res.json({
-        message: "Backend is working!"
-    });
-});
-
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Serve all files from the public folder
+app.use(express.static(path.join(__dirname, "public")));
+
+// Homepage
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// Start server
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
    
